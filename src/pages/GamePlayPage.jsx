@@ -11,25 +11,19 @@ const GamePlayPage = () => {
   const [battleTime, setBattleTime] = useState(false);
   const [playerPicked, setPlayerPicked] = useState("");
   const [housePicked, setHousePicked] = useState("");
-  const [showHousePicked, setShowHousePicked] = useState(false);
   const [winner, setWinner] = useState("");
-  const [showWinner, setShowWinner] = useState(false);
 
   useEffect(() => {
     if (battleTime) {
       houseOptionPicked();
-
-      setTimeout(() => {
-        handleWinner();
-      }, 2000);
     }
   }, [battleTime]);
 
   useEffect(() => {
-    if (housePicked.length > 0) {
+    if (battleTime && housePicked.length > 0) {
       setTimeout(() => {
-        setShowHousePicked(true);
-      }, 1000);
+        handleWinner();
+      }, 1500);
     }
   }, [housePicked]);
 
@@ -111,18 +105,56 @@ const GamePlayPage = () => {
     }
   };
 
-  const handleWinner = () => {
-    // setShowWinner(true);
-    setWinner("player");
+  const handleWinner = async () => {
+    await checkWinner();
   };
 
   const handlePlayAgain = () => {
     setBattleTime(false);
     setPlayerPicked("");
     setHousePicked("");
-    setShowHousePicked(false);
-    // setShowWinner(false);
     setWinner("");
+  };
+
+  const checkWinner = async () => {
+    console.log("Checking winner");
+
+    const resultCombinations = {
+      paper: {
+        paper: "tie",
+        scissors: "house",
+        rock: "player",
+      },
+      scissors: {
+        paper: "player",
+        scissors: "tie",
+        rock: "house",
+      },
+      rock: {
+        paper: "house",
+        scissors: "player",
+        rock: "tie",
+      },
+    };
+
+    const result = resultCombinations[playerPicked][housePicked];
+
+    switch (result) {
+      case "tie":
+        console.log("Tie");
+        break;
+      case "player":
+        console.log("You win");
+        break;
+      case "house":
+        console.log("You Lose");
+        break;
+      default:
+        console.log("Invalid result");
+        break;
+    }
+
+    setWinner(result);
   };
 
   return (
@@ -182,8 +214,10 @@ const GamePlayPage = () => {
                   <div>
                     {winner === "player" ? (
                       <span className="text-5xl font-[600] text-white">YOU WIN</span>
-                    ) : (
+                    ) : winner === "house" ? (
                       <span className="text-5xl font-[600] text-white">YOU LOSE</span>
+                    ) : (
+                      <span className="text-5xl font-[600] text-white">TIE</span>
                     )}
                   </div>
                   <div>
@@ -201,12 +235,7 @@ const GamePlayPage = () => {
 
               <div className="w-[50%] flex flex-col items-center">
                 <p className="text-3xl text-white font-[700]">THE HOUSE PICKED</p>
-
-                {showHousePicked ? (
-                  renderHousePicked()
-                ) : (
-                  <div className="bg-[#14233D] bg-opacity-90 p-28 rounded-full mt-44"></div>
-                )}
+                {renderHousePicked()}
               </div>
             </div>
           </div>
