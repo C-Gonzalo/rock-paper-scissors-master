@@ -11,7 +11,7 @@
 }
 
 header {
-  outline-width: 2px;
+  outline-width: 3px;
   outline-style: solid;
   outline-color: hsl(217, 16%, 45%);
 }
