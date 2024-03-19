@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import closeIco from "../assets/images/icon-close.svg";
 import paper from "../assets/images/icon-paper.svg";
 import rock from "../assets/images/icon-rock.svg";
@@ -8,10 +8,126 @@ import gameNameLogo from "../assets/images/logo.svg";
 
 const GamePlayPage = () => {
   const [rulesModal, setRulesModal] = useState(false);
+  const [battleTime, setBattleTime] = useState(false);
+  const [playerPicked, setPlayerPicked] = useState("");
+  const [housePicked, setHousePicked] = useState("");
+  const [showHousePicked, setShowHousePicked] = useState(false);
+  const [winner, setWinner] = useState("");
+  const [showWinner, setShowWinner] = useState(false);
+
+  useEffect(() => {
+    if (battleTime) {
+      houseOptionPicked();
+
+      setTimeout(() => {
+        handleWinner();
+      }, 2000);
+    }
+  }, [battleTime]);
+
+  useEffect(() => {
+    if (housePicked.length > 0) {
+      setTimeout(() => {
+        setShowHousePicked(true);
+      }, 1000);
+    }
+  }, [housePicked]);
+
+  const handlePick = (optPicked) => {
+    console.log(optPicked);
+    setBattleTime(true);
+    setPlayerPicked(optPicked);
+  };
+
+  const playerOptionPicked = () => {
+    if (playerPicked === "paper") {
+      return (
+        <div className="paperGradient h-80 w-80 flex justify-center items-center rounded-[50%] shadow-2xl mt-32">
+          <div className="bg-white h-60 w-60 flex justify-center items-center rounded-[50%] select-none">
+            <img className="w-24" src={paper} alt="Paper Icon" />
+          </div>
+        </div>
+      );
+    }
+
+    if (playerPicked === "scissors") {
+      return (
+        <div className="scissorsGradient h-80 w-80 flex justify-center items-center rounded-[50%] shadow-2xl mt-32">
+          <div className="bg-white h-60 w-60 flex justify-center items-center rounded-[50%] select-none">
+            <img className="w-24" src={scissors} alt="Paper Icon" />
+          </div>
+        </div>
+      );
+    }
+
+    if (playerPicked === "rock") {
+      return (
+        <div className="rockGradient h-80 w-80 flex justify-center items-center rounded-[50%] shadow-2xl mt-32">
+          <div className="bg-white h-60 w-60 flex justify-center items-center rounded-[50%] select-none">
+            <img className="w-24" src={rock} alt="Paper Icon" />
+          </div>
+        </div>
+      );
+    }
+  };
+
+  const houseOptionPicked = async () => {
+    const options = ["rock", "paper", "scissors"];
+
+    const randomIndex = Math.floor(Math.random() * options.length);
+    console.log(randomIndex);
+    setHousePicked(options[randomIndex]);
+  };
+
+  const renderHousePicked = () => {
+    if (housePicked === "paper") {
+      return (
+        <div className="paperGradient h-80 w-80 flex justify-center items-center rounded-[50%] shadow-2xl mt-32">
+          <div className="bg-white h-60 w-60 flex justify-center items-center rounded-[50%] select-none">
+            <img className="w-24" src={paper} alt="Paper Icon" />
+          </div>
+        </div>
+      );
+    }
+
+    if (housePicked === "scissors") {
+      return (
+        <div className="scissorsGradient h-80 w-80 flex justify-center items-center rounded-[50%] shadow-2xl mt-32">
+          <div className="bg-white h-60 w-60 flex justify-center items-center rounded-[50%] select-none">
+            <img className="w-24" src={scissors} alt="Paper Icon" />
+          </div>
+        </div>
+      );
+    }
+
+    if (housePicked === "rock") {
+      return (
+        <div className="rockGradient h-80 w-80 flex justify-center items-center rounded-[50%] shadow-2xl mt-32">
+          <div className="bg-white h-60 w-60 flex justify-center items-center rounded-[50%] select-none">
+            <img className="w-24" src={rock} alt="Paper Icon" />
+          </div>
+        </div>
+      );
+    }
+  };
+
+  const handleWinner = () => {
+    // setShowWinner(true);
+    setWinner("player");
+  };
+
+  const handlePlayAgain = () => {
+    setBattleTime(false);
+    setPlayerPicked("");
+    setHousePicked("");
+    setShowHousePicked(false);
+    // setShowWinner(false);
+    setWinner("");
+  };
 
   return (
     <main className="pageBackground w-full min-h-screen flex justify-center select-none">
-      <div>
+      <div className="flex flex-col items-center">
         <header className="w-[700px] flex justify-between items-center px-6 py-4 rounded-xl mt-10">
           <div className="flex items-center select-none">
             <img src={gameNameLogo} alt="Rock, Paper, Scissors logo" />
@@ -22,35 +138,79 @@ const GamePlayPage = () => {
           </div>
         </header>
 
-        <div className={`w-full h-[500px] flex justify-center items-center mt-20`}>
-          <div className="bgTriangle relative flex w-[313px] h-[278px] ">
-            <div
-              className="paperGradient absolute -left-14 -top-14 h-44 w-44 flex self-start justify-center items-center rounded-[50%] cursor-pointer active:scale-90 transition-all"
-              onClick={() => console.log("Paper")}>
-              <div className="bg-white h-32 w-32 flex justify-center items-center rounded-[50%] select-none">
-                <img src={paper} alt="Paper Icon" />
-              </div>
-            </div>
-
-            <div
-              className="scissorsGradient absolute -right-14 -top-14 h-44 w-44 flex self-start justify-center items-center rounded-[50%] cursor-pointer active:scale-90 transition-all"
-              onClick={() => console.log("Scissors")}>
-              <div className="bg-white h-32 w-32 flex justify-center items-center rounded-[50%] select-none">
-                <img src={scissors} alt="Paper Icon" />
-              </div>
-            </div>
-
-            <div
-              className="flex justify-center absolute -bottom-12 w-full cursor-pointer active:scale-90 transition-all"
-              onClick={() => console.log("Rock")}>
-              <div className="rockGradient h-44 w-44 flex self-start justify-center items-center rounded-[50%]">
+        {!battleTime ? (
+          <div className="h-[500px] flex justify-center items-center mt-20">
+            <div className="bgTriangle relative flex w-[313px] h-[278px] ">
+              <div
+                className="paperGradient absolute -left-14 -top-14 h-44 w-44 flex self-start justify-center items-center rounded-[50%] cursor-pointer active:scale-90 transition-all shadow-2xl active:shadow-none"
+                onClick={() => handlePick("paper")}>
                 <div className="bg-white h-32 w-32 flex justify-center items-center rounded-[50%] select-none">
-                  <img src={rock} alt="Paper Icon" />
+                  <img src={paper} alt="Paper Icon" />
+                </div>
+              </div>
+
+              <div
+                className="scissorsGradient absolute -right-14 -top-14 h-44 w-44 flex self-start justify-center items-center rounded-[50%] cursor-pointer active:scale-90 transition-all shadow-2xl active:shadow-none"
+                onClick={() => handlePick("scissors")}>
+                <div className="bg-white h-32 w-32 flex justify-center items-center rounded-[50%] select-none">
+                  <img src={scissors} alt="Paper Icon" />
+                </div>
+              </div>
+
+              <div
+                className="flex justify-center absolute -bottom-12 w-full cursor-pointer active:scale-90 transition-all"
+                onClick={() => handlePick("rock")}>
+                <div className="rockGradient h-44 w-44 flex self-start justify-center items-center rounded-[50%] shadow-2xl active:shadow-none">
+                  <div className="bg-white h-32 w-32 flex justify-center items-center rounded-[50%] select-none">
+                    <img src={rock} alt="Paper Icon" />
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
+        ) : (
+          <div className="w-[1000px] h-[500px] flex mt-20">
+            <div className="w-full flex justify-between">
+              <div className="w-[50%] flex flex-col items-center">
+                <p className="text-3xl text-white font-[700]">YOU PICKED</p>
+                {/* <div className="bg-[#14233D] bg-opacity-90 p-28 rounded-full mt-32"></div> */}
+                {playerOptionPicked()}
+              </div>
+
+              {winner.length > 0 && (
+                <div className="w-[30%] flex flex-col items-center justify-center gap-5 mt-20">
+                  <div>
+                    {winner === "player" ? (
+                      <span className="text-5xl font-[600] text-white">YOU WIN</span>
+                    ) : (
+                      <span className="text-5xl font-[600] text-white">YOU LOSE</span>
+                    )}
+                  </div>
+                  <div>
+                    <button
+                      onClick={handlePlayAgain}
+                      type="button"
+                      className={`${
+                        winner === "player" ? "darkText" : "text-red-500"
+                      } bg-white px-16 py-3 font-[700] text-sm rounded-md hover:bg-slate-200 active:scale-90 transition-all`}>
+                      PLAY AGAIN
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              <div className="w-[50%] flex flex-col items-center">
+                <p className="text-3xl text-white font-[700]">THE HOUSE PICKED</p>
+
+                {showHousePicked ? (
+                  renderHousePicked()
+                ) : (
+                  <div className="bg-[#14233D] bg-opacity-90 p-28 rounded-full mt-44"></div>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
       </div>
 
       <div
