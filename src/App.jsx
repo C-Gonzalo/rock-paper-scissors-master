@@ -1,10 +1,11 @@
-function App() {
+import GamePlayPage from "./pages/GamePlayPage";
 
+function App() {
   return (
     <>
-      <div>Rock, Paper, Scissors game</div>        
+      <GamePlayPage />
     </>
-  )
+  );
 }
 
-export default App
+export default App;
