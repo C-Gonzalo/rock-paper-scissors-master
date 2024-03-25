@@ -12,6 +12,7 @@ const GamePlayPage = () => {
   const [playerPicked, setPlayerPicked] = useState("");
   const [housePicked, setHousePicked] = useState("");
   const [winner, setWinner] = useState("");
+  const [score, setScore] = useState(0);
 
   useEffect(() => {
     if (battleTime) {
@@ -154,6 +155,9 @@ const GamePlayPage = () => {
         break;
     }
 
+    result === "player" && setScore(score + 1);
+    // result === "player" ? setScore(score + 1) : result === "house" && setScore(score - 1);
+
     setWinner(result);
   };
 
@@ -166,7 +170,7 @@ const GamePlayPage = () => {
           </div>
           <div className="w-36 h-28 bg-white flex flex-col justify-center items-center rounded-lg">
             <p className="scoreText text-sm font-[600]">S C O R E</p>
-            <p className="darkText text-6xl font-[700]">12</p>
+            <p className="darkText text-6xl font-[700]">{score}</p>
           </div>
         </header>
 
@@ -225,7 +229,7 @@ const GamePlayPage = () => {
                       onClick={handlePlayAgain}
                       type="button"
                       className={`${
-                        winner === "player" ? "darkText" : "text-red-500"
+                        winner === "house" ? "text-red-500" : "darkText"
                       } bg-white px-16 py-3 font-[700] text-sm rounded-md hover:bg-slate-200 active:scale-90 transition-all`}>
                       PLAY AGAIN
                     </button>
