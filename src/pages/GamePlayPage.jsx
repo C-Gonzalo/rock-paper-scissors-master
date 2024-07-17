@@ -5,64 +5,48 @@ import rock from "../assets/images/icon-rock.svg";
 import scissors from "../assets/images/icon-scissors.svg";
 import rulesImg from "../assets/images/image-rules.svg";
 import gameNameLogo from "../assets/images/logo.svg";
+import Choice from "../components/Choice";
+import RpsButton from "../components/RpsButton";
 
 const GamePlayPage = () => {
   const [rulesModal, setRulesModal] = useState(false);
-  const [battleTime, setBattleTime] = useState(false);
+  const [showBattleResult, setShowBattleResult] = useState(false);
   const [playerPicked, setPlayerPicked] = useState("");
   const [housePicked, setHousePicked] = useState("");
   const [winner, setWinner] = useState("");
   const [score, setScore] = useState(0);
 
   useEffect(() => {
-    if (battleTime) {
+    if (showBattleResult) {
       houseOptionPicked();
     }
-  }, [battleTime]);
+  }, [showBattleResult]);
 
   useEffect(() => {
-    if (battleTime && housePicked.length > 0) {
+    if (showBattleResult && housePicked.length > 0) {
       setTimeout(() => {
-        handleWinner();
-      }, 1000);
+        checkWinner();
+      }, 500);
     }
   }, [housePicked]);
 
   const handlePick = (optPicked) => {
     console.log(optPicked);
-    setBattleTime(true);
+    setShowBattleResult(true);
     setPlayerPicked(optPicked);
   };
 
   const playerOptionPicked = () => {
     if (playerPicked === "paper") {
-      return (
-        <div className="paperGradient w-40 h-40 md:w-80 md:h-80 flex justify-center items-center rounded-[50%] shadow-2xl">
-          <div className="bg-white w-28 h-28 md:w-60 md:h-60 flex justify-center items-center rounded-[50%] select-none">
-            <img className="w-12 md:w-24" src={paper} alt="Paper Icon" />
-          </div>
-        </div>
-      );
+      return <Choice image={paper} name={"paper"} classColor={"paperGradient"} winner={winner} />;
     }
 
     if (playerPicked === "scissors") {
-      return (
-        <div className="scissorsGradient w-40 h-40 md:w-80 md:h-80 flex justify-center items-center rounded-[50%] shadow-2xl">
-          <div className="bg-white w-28 h-28 md:w-60 md:h-60 flex justify-center items-center rounded-[50%] select-none">
-            <img className="w-12 md:w-24" src={scissors} alt="Paper Icon" />
-          </div>
-        </div>
-      );
+      return <Choice image={scissors} name={"scissors"} classColor={"scissorsGradient"} />;
     }
 
     if (playerPicked === "rock") {
-      return (
-        <div className="rockGradient w-40 h-40 md:w-80 md:h-80 flex justify-center items-center rounded-[50%] shadow-2xl">
-          <div className="bg-white w-28 h-28 md:w-60 md:h-60 flex justify-center items-center rounded-[50%] select-none">
-            <img className="w-12 md:w-24" src={rock} alt="Paper Icon" />
-          </div>
-        </div>
-      );
+      return <Choice image={rock} name={"rock"} classColor={"rockGradient"} />;
     }
   };
 
@@ -76,48 +60,26 @@ const GamePlayPage = () => {
 
   const renderHousePicked = () => {
     if (housePicked === "paper") {
-      return (
-        <div className="paperGradient w-40 h-40 md:w-80 md:h-80 flex justify-center items-center rounded-[50%] shadow-2xl">
-          <div className="bg-white w-28 h-28 md:w-60 md:h-60 flex justify-center items-center rounded-[50%] select-none">
-            <img className="w-12 md:w-24" src={paper} alt="Paper Icon" />
-          </div>
-        </div>
-      );
+      return <Choice image={paper} name={"paper"} classColor={"paperGradient"} />;
     }
 
     if (housePicked === "scissors") {
-      return (
-        <div className="scissorsGradient w-40 h-40 md:w-80 md:h-80 flex justify-center items-center rounded-[50%] shadow-2xl">
-          <div className="bg-white w-28 h-28 md:w-60 md:h-60 flex justify-center items-center rounded-[50%] select-none">
-            <img className="w-12 md:w-24" src={scissors} alt="Paper Icon" />
-          </div>
-        </div>
-      );
+      return <Choice image={scissors} name={"scissors"} classColor={"scissorsGradient"} />;
     }
 
     if (housePicked === "rock") {
-      return (
-        <div className="rockGradient w-40 h-40 md:w-80 md:h-80 flex justify-center items-center rounded-[50%] shadow-2xl">
-          <div className="bg-white w-28 h-28 md:w-60 md:h-60 flex justify-center items-center rounded-[50%] select-none">
-            <img className="w-12 md:w-24" src={rock} alt="Paper Icon" />
-          </div>
-        </div>
-      );
+      return <Choice image={rock} name={"rock"} classColor={"rockGradient"} />;
     }
   };
 
-  const handleWinner = async () => {
-    await checkWinner();
-  };
-
   const handlePlayAgain = () => {
-    setBattleTime(false);
+    setShowBattleResult(false);
     setPlayerPicked("");
     setHousePicked("");
     setWinner("");
   };
 
-  const checkWinner = async () => {
+  const checkWinner = () => {
     console.log("Checking winner");
 
     const resultCombinations = {
@@ -176,33 +138,25 @@ const GamePlayPage = () => {
         </div>
       </header>
       <div className="w-full flex flex-col items-center justify-between">
-        {!battleTime ? (
+        {!showBattleResult ? (
           <div className="flex justify-center items-center sm:mt-20">
             <div className="bgTriangle relative bg-contain bg-center flex w-[220px] h-[185px] sm:w-[313px] sm:h-[278px] ">
               <div
-                className="paperGradient absolute -left-14 -top-14 w-36 h-36 sm:w-44 sm:h-44 flex self-start justify-center items-center rounded-[50%] cursor-pointer active:scale-90 transition-all shadow-2xl active:shadow-none"
+                className="absolute -left-14 -top-14 cursor-pointer active:scale-90 transition-transform"
                 onClick={() => handlePick("paper")}>
-                <div className="bg-white w-28 h-28 sm:w-32 sm:h-32 flex justify-center items-center rounded-[50%] select-none">
-                  <img src={paper} alt="Paper Icon" />
-                </div>
+                <RpsButton img={paper} name={"paper"} classColor={"paperGradient"} />
               </div>
 
               <div
-                className="scissorsGradient absolute -right-14 -top-14 w-36 h-36 sm:w-44 sm:h-44 flex self-start justify-center items-center rounded-[50%] cursor-pointer active:scale-90 transition-all shadow-2xl active:shadow-none"
+                className="absolute -right-14 -top-14 cursor-pointer active:scale-90 transition-transform"
                 onClick={() => handlePick("scissors")}>
-                <div className="bg-white w-28 h-28 sm:w-32 sm:h-32 flex justify-center items-center rounded-[50%] select-none">
-                  <img src={scissors} alt="Paper Icon" />
-                </div>
+                <RpsButton img={scissors} name={"scissors"} classColor={"scissorsGradient"} />
               </div>
 
               <div
                 className="flex justify-center absolute -bottom-12 w-full cursor-pointer active:scale-90 transition-all"
                 onClick={() => handlePick("rock")}>
-                <div className="rockGradient w-36 h-36 sm:w-44 sm:h-44 flex self-start justify-center items-center rounded-[50%] shadow-2xl active:shadow-none">
-                  <div className="bg-white w-28 h-28 sm:w-32 sm:h-32 flex justify-center items-center rounded-[50%] select-none">
-                    <img src={rock} alt="Paper Icon" />
-                  </div>
-                </div>
+                <RpsButton img={rock} name={"rock"} classColor={"rockGradient"} />
               </div>
             </div>
           </div>
@@ -228,31 +182,33 @@ const GamePlayPage = () => {
         )}
       </div>
 
-      {battleTime && winner.length > 0 && (
-        <div className="xl:w-[30%] flex flex-col items-center justify-center gap-5 sm:mt-5">
-          <div>
-            {winner === "player" ? (
-              <span className="text-3xl md:text-5xl font-[600] text-white">YOU WIN</span>
-            ) : winner === "house" ? (
-              <span className="text-3xl md:text-5xl font-[600] text-white">YOU LOSE</span>
-            ) : (
-              <span className="text-3xl md:text-5xl font-[600] text-white">TIE</span>
-            )}
+      <div className="relative w-full flex justify-center">
+        {showBattleResult && winner.length > 0 && (
+          <div className="xl:absolute bottom-24 max-h-screen xl:w-[30%] flex flex-col items-center justify-center gap-5 sm:mt-5">
+            <div>
+              {winner === "player" ? (
+                <span className="text-4xl md:text-5xl font-[600] text-white">YOU WIN</span>
+              ) : winner === "house" ? (
+                <span className="text-4xl md:text-5xl font-[600] text-white">YOU LOSE</span>
+              ) : (
+                <span className="text-4xl md:text-5xl font-[600] text-white">TIE</span>
+              )}
+            </div>
+            <div>
+              <button
+                onClick={handlePlayAgain}
+                type="button"
+                className={`${
+                  winner === "house" ? "text-red-500" : "darkText"
+                } bg-white px-16 py-3 font-[700] text-sm rounded-md hover:bg-slate-200 active:scale-90 transition-all`}>
+                PLAY AGAIN
+              </button>
+            </div>
           </div>
-          <div>
-            <button
-              onClick={handlePlayAgain}
-              type="button"
-              className={`${
-                winner === "house" ? "text-red-500" : "darkText"
-              } bg-white px-16 py-3 font-[700] text-sm rounded-md hover:bg-slate-200 active:scale-90 transition-all`}>
-              PLAY AGAIN
-            </button>
-          </div>
-        </div>
-      )}
+        )}
+      </div>
 
-      <div className="flex w-full justify-end pr-10 mb-5 md:mb-10">
+      <div className="flex w-full justify-center sm:justify-end sm:pr-10 mb-5 md:mb-10">
         <div
           className="px-10 py-2 outline outline-slate-500 outline-2 text-white font-[600] rounded-md cursor-pointer hover:bg-white hover:text-black hover:outline-none transition-colors"
           onClick={() => setRulesModal(true)}>
@@ -262,7 +218,7 @@ const GamePlayPage = () => {
 
       {rulesModal && (
         <div className="absolute w-full h-screen flex justify-center items-center bg-black bg-opacity-50">
-          <div className="relative w-full h-full sm:w-[450px] sm:h-[430px] flex flex-col justify-center sm:justify-between bg-white  rounded-lg p-8">
+          <div className="relative w-full h-full sm:w-[450px] sm:h-[430px] flex flex-col justify-center sm:justify-between bg-white sm:rounded-lg p-8">
             <div className="flex justify-center sm:justify-start items-center">
               <span className="absolute top-20 sm:top-8 darkText text-4xl font-[700]">RULES</span>
               <div
